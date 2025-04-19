@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Giỏ hàng - My Shop{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Giỏ hàng</h1>
+
+{% if cart_items %}
+<table class="w-full bg-white rounded shadow overflow-hidden">
+  <thead>
+    <tr class="bg-gray-200 text-left">
+      <th class="p-4">Sản phẩm</th>
+      <th class="p-4">Giá</th>
+      <th class="p-4">Số lượng</th>
+      <th class="p-4">Tổng</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cart_items %}
+    <tr class="border-t">
+      <td class="p-4">{{ item.name }}</td>
+      <td class="p-4">{{ item.price }}₫</td>
+      <td class="p-4">{{ item.quantity }}</td>
+      <td class="p-4">{{ item.total }}₫</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="text-right mt-4">
+  <a href="/checkout" class="bg-green-600 text-white px-4 py-2 rounded">Thanh toán</a>
+</div>
+
+{% else %}
+<p>🛍 Giỏ hàng của bạn đang trống.</p>
+{% endif %}
+{% endblock %}

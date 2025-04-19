@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Trang chủ - My Shop{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Sản phẩm mới</h1>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+  {% for product in products %}
+  <div class="bg-white p-4 rounded shadow">
+    <img src="{{ product.image }}" class="w-full h-40 object-cover rounded mb-2">
+    <h2 class="font-semibold">{{ product.name }}</h2>
+    <p class="text-sm text-gray-600">{{ product.price }}₫</p>
+    <a href="/product/{{ product.id }}" class="mt-2 inline-block text-blue-600 hover:underline">Xem chi tiết</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

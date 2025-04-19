@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shop</title>
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Sản phẩm mới</h1>
+
+  <div 
+    id="product-list"
+    hx-get="/products"
+    hx-trigger="load"
+    hx-target="#product-list"
+    hx-swap="innerHTML">
+    <!-- content sẽ được nạp từ list.html -->
+  </div>
+
+</body>
+</html>
