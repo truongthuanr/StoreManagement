@@ -78,3 +78,9 @@ def login(
     response = RedirectResponse(url="/products", status_code=303)
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return response
+
+@router.get("/logout")
+def logout(request: Request):
+    response = RedirectResponse(url="/login", status_code=303)
+    response.delete_cookie("access_token")
+    return response
