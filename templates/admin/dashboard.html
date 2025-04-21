@@ -1,0 +1,29 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">📊 Admin Dashboard</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="bg-white p-6 rounded-lg shadow text-center">
+    <h2 class="text-xl font-semibold">👥 Người dùng</h2>
+    <p class="text-2xl mt-2 font-bold text-blue-600">{{ total_users }}</p>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow text-center">
+    <h2 class="text-xl font-semibold">📦 Sản phẩm</h2>
+    <p class="text-2xl mt-2 font-bold text-green-600">{{ total_products }}</p>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow text-center">
+    <h2 class="text-xl font-semibold">🧾 Đơn hàng</h2>
+    <p class="text-2xl mt-2 font-bold text-yellow-600">{{ total_orders }}</p>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow text-center">
+    <h2 class="text-xl font-semibold">💰 Doanh thu</h2>
+    <p class="text-2xl mt-2 font-bold text-red-600">{{ "{:,.0f}".format(total_revenue) }}₫</p>
+  </div>
+</div>
+{% endblock %}

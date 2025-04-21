@@ -1,0 +1,30 @@
+{% extends "admin/admin_base.html" %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">📦 Quản lý sản phẩm</h1>
+
+<div class="max-w-6xl mx-auto p-6">
+    <!-- <h1 class="text-3xl font-bold mb-6">Quản lý sản phẩm</h1> -->
+
+    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-200 text-gray-700">
+            <tr>
+                <th class="py-3 px-4 text-left">Tên sản phẩm</th>
+                <th class="py-3 px-4 text-left">Giá</th>
+                <th class="py-3 px-4 text-left">Tồn kho</th>
+                <th class="py-3 px-4 text-left">Danh mục</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in products %}
+            <tr class="border-t hover:bg-gray-50">
+                <td class="py-3 px-4">{{ p.name }}</td>
+                <td class="py-3 px-4">{{ p.price }}₫</td>
+                <td class="py-3 px-4">{{ p.stock }}</td>
+                <td class="py-3 px-4">{{ p.category.name if p.category else "Không có" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

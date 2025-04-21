@@ -1,0 +1,39 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Trang Quản Trị{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">🛠️ Khu vực quản trị</h1>
+<p class="text-gray-700 mb-8">Chào {{ admin.name }}, chọn một mục bên dưới để bắt đầu quản lý:</p>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <a href="/admin/products" class="bg-white p-6 rounded-lg shadow hover:bg-blue-50 transition">
+    📦 <strong>Sản phẩm</strong><br>
+    Quản lý thông tin sản phẩm, tồn kho, hình ảnh...
+  </a>
+  <a href="/admin/categories" class="bg-white p-6 rounded-lg shadow hover:bg-blue-50 transition">
+    📁 <strong>Danh mục</strong><br>
+    Sắp xếp sản phẩm theo danh mục.
+  </a>
+  <a href="/admin/orders" class="bg-white p-6 rounded-lg shadow hover:bg-blue-50 transition">
+    🧾 <strong>Đơn hàng</strong><br>
+    Xem và xử lý đơn hàng của khách.
+  </a>
+  <a href="/admin/users" class="bg-white p-6 rounded-lg shadow hover:bg-blue-50 transition">
+    👥 <strong>Người dùng</strong><br>
+    Danh sách tài khoản khách hàng và admin.
+  </a>
+  <a href="/admin/reviews" class="bg-white p-6 rounded-lg shadow hover:bg-blue-50 transition">
+    ⭐ <strong>Đánh giá</strong><br>
+    Kiểm duyệt đánh giá sản phẩm.
+  </a>
+  <a href="/admin/coupons" class="bg-white p-6 rounded-lg shadow hover:bg-blue-50 transition">
+    🎟️ <strong>Mã giảm giá</strong><br>
+    Quản lý khuyến mãi, voucher...
+  </a>
+  <a href="/admin/payments" class="bg-white p-6 rounded-lg shadow hover:bg-blue-50 transition">
+    💳 <strong>Thanh toán</strong><br>
+    Theo dõi các giao dịch đã hoàn tất.
+  </a>
+</div>
+{% endblock %}
