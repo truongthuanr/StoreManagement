@@ -1,11 +1,13 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
 from jose import jwt, JWTError
+
+
+from config.config import *
 from model.data.models import User
 from db_config.mysql_config import sess_db
 
-SECRET_KEY = "your-secret-key"
-ALGORITHM = "HS256"
+
 
 class UserContextMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
