@@ -5,6 +5,8 @@ from model.data.models import Product, User  # SQLAlchemy Product model
 from db_config.mysql_config import sess_db
 from auth.dependencies import require_admin
 from fastapi.templating import Jinja2Templates
+from utils.template import render_template
+
 
 
 router = APIRouter()
@@ -35,7 +37,7 @@ def admin_dashboard(request: Request, db: Session = Depends(sess_db), admin: Use
     total_orders = 99 #db.query(Order).count()
     total_revenue = 99  # db.query(func.sum(Payment.amount)).scalar() or 0  # assuming "amount" column
 
-    return templates.TemplateResponse("admin/dashboard.html", {
+    return render_template(request, "admin/dashboard.html", {
         "request": request,
         "total_users": total_users,
         "total_products": total_products,
