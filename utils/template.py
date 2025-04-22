@@ -15,4 +15,3 @@ def render_template(request: Request, template_name: str, context: dict = {}) ->
         "user": user
     }
     return templates.TemplateResponse(template_name, context)
- 

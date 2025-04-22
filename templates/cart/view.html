@@ -8,7 +8,7 @@
   {% if items %}
     <div class="space-y-6">
       {% for item in items %}
-        <div class="flex items-center bg-white p-4 rounded-lg shadow-sm">
+        <div id="cart-item-{{ item.id }}" class="flex items-center bg-white p-4 rounded-lg shadow-sm">
           <!-- Ảnh sản phẩm -->
           <img src="{{ item.image_url or 'https://via.placeholder.com/100' }}" alt="{{ item.name }}" class="w-24 h-24 object-cover rounded mr-6">
 
@@ -20,27 +20,37 @@
           </div>
 
           <!-- Xoá -->
-          <form method="post" action="/cart/remove/{{ item.id }}">
+          <!-- <form method="post" action="/cart/remove/{{ item.id }}">
             <button type="submit" class="text-red-500 hover:underline text-sm">🗑 Xoá</button>
-          </form>
+          </form> -->
+          <button 
+          hx-post="/cart/remove/{{ item.id }}" 
+            hx-target="#cart-item-{{ item.id }}"
+            hx-swap="outerHTML"
+            hx-headers='{"HX-Trigger-Name": "update_total"}'
+            class="text-red-500 hover:underline">
+          🗑 Xoá
+        </button>
         </div>
       {% endfor %}
     </div>
 
     <!-- Tổng cộng & thanh toán -->
     <div class="mt-8 flex justify-between items-center bg-white p-4 rounded-lg shadow">
-      <div class="text-xl font-semibold">
-        Tổng cộng: 
-        <span class="text-green-600">{{ cart_total | round(2) }}đ</span>
+        <<div 
+        id="cart-total" 
+        hx-swap-oob="true"
+        class="text-xl font-semibold">
+        Tổng cộng: {{ cart_total | round(2) }}đ
       </div>
-      <a href="/checkout" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition">
-        ✅ Thanh toán
+      <a href="/makeorder" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition">
+        ✅ Đặt hàng
       </a>
     </div>
   {% else %}
     <div class="text-center text-gray-600">
       <p>Giỏ hàng của bạn đang trống.</p>
-      <a href="/" class="text-blue-600 hover:underline">← Tiếp tục mua sắm</a>
+      <a href="/products" class="text-blue-600 hover:underline">← Tiếp tục mua sắm</a>
     </div>
   {% endif %}
 {% endblock %}

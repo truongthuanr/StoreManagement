@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, Depends, Form, Request, HTTPException 
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -72,3 +72,54 @@ def view_cart(
         "cart_total": cart_total,
         "user": user  # truyền user vào base để hiện lên nav bar
     })
+
+
+@router.post("/cart/remove/{item_id}", response_class=HTMLResponse)
+def htmx_remove_cart_item(
+    request: Request,
+    item_id: int,
+    db: Session = Depends(sess_db),
+    user = Depends(get_current_user)
+):
+    item = (
+        db.query(CartItem)
+        .join(CartItem.cart)
+        .filter(CartItem.id == item_id, CartItem.cart.has(user_id=user.id))
+        .first()
+    )
+
+    if not item:
+        raise HTTPException(status_code=404, detail="Item không tồn tại hoặc không thuộc về bạn")
+
+    db.delete(item)
+    db.commit()
+
+    # Tính lại tổng tiền
+    cart = db.query(Cart).filter_by(user_id=user.id).first()
+    total = 0
+    if cart:
+        items = (
+            db.query(CartItem)
+            .filter(CartItem.cart_id == cart.id)
+            .join(Product)
+            .with_entities(Product.price, CartItem.quantity)
+            .all()
+        )
+        total = sum(i.price * i.quantity for i in items)
+
+    # Nếu request yêu cầu cập nhật total (qua hx-vals)
+    if request.headers.get("HX-Request") and "update_total" in request.headers.get("HX-Trigger-Name", ""):
+        # Trả về đoạn HTML mới của tổng tiền
+        return HTMLResponse(
+            content=f"""
+                <div 
+                    id="cart-total" 
+                    hx-swap-oob="true"
+                    class="text-xl font-semibold">
+                    Tổng cộng: {round(total, 2)}đ
+                </div>
+            """
+        )
+    # Trả về chuỗi rỗng
+    # UI dùng HTMX, hx-post
+    return HTMLResponse(content="")
