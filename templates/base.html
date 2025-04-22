@@ -9,13 +9,16 @@
 <body class="bg-gray-100 text-gray-900">
   <nav class="bg-white shadow p-4 flex justify-between items-center">
     <a href="/" class="text-xl font-bold">🛒 My Shop</a>
-    
+
     <div class="flex items-center space-x-4">
-      <a href="/cart" class="hover:underline">Cart</a>
-      <a href="/logout" 
-         class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-         Logout
-      </a>
+      <a href="/cart" class="hover:underline">🛒 Cart</a>
+
+      {% if user %}
+        <span class="text-gray-600">👤 {{ user.name }}</span>
+        <a href="/logout" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">Logout</a>
+      {% else %}
+        <a href="/login" class="text-blue-600 hover:underline">Login</a>
+      {% endif %}
     </div>
   </nav>
 
