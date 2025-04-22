@@ -1,0 +1,40 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Chỉnh sửa sản phẩm{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">✏️ Chỉnh sửa sản phẩm</h1>
+
+  <form method="post" action="/admin/products/{{ product.id }}/edit" class="space-y-4 bg-white p-6 rounded shadow">
+    <div>
+      <label class="block font-semibold">Tên sản phẩm</label>
+      <input type="text" name="name" value="{{ product.name }}" class="w-full border rounded px-3 py-2" required>
+    </div>
+
+    <div>
+      <label class="block font-semibold">Giá</label>
+      <input type="number" name="price" value="{{ product.price }}" step="0.01" class="w-full border rounded px-3 py-2" required>
+    </div>
+
+    <div>
+      <label class="block font-semibold">Mô tả</label>
+      <textarea name="description" class="w-full border rounded px-3 py-2">{{ product.description }}</textarea>
+    </div>
+
+    <div>
+      <label class="block font-semibold">Danh mục</label>
+      <select name="category_id" class="w-full border rounded px-3 py-2">
+        {% for cat in categories %}
+          <option value="{{ cat.id }}" {% if product.category_id == cat.id %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="flex justify-end space-x-4">
+      <a href="/admin/products" class="text-blue-600 hover:underline">← Quay lại</a>
+      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Lưu thay đổi</button>
+    </div>
+  </form>
+{% endblock %}
