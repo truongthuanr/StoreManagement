@@ -10,4 +10,3 @@ app.include_router(product.router)
 app.include_router(auth.router)
 app.include_router(admin.router, tags=["Admin"])
 app.include_router(cart.router)
-
