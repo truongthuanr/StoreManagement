@@ -7,14 +7,19 @@
       <h3 class="text-lg font-semibold mt-2">{{ product.name }}</h3>
       <p class="text-gray-600 text-sm">{{ product.description[:100] }}...</p>
       <div class="text-pink-600 font-bold mt-1">{{ "{:,.0f}".format(product.price) }}₫</div>
-      <button
+      <!-- <button
         class="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
         hx-post="/cart/add/{{ product.id }}"
         hx-target="#cart-badge"
         hx-swap="outerHTML"
       >
         Add to Cart
-      </button>
+      </button> -->
+      <form method="post" action="/cart/add" class="inline">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button class="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">🛒 Thêm vào giỏ</button>
+      </form>
+      
     </div>
   {% endfor %}
 </div>

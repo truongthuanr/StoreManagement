@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Giỏ hàng{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-bold mb-6">🛒 Giỏ hàng của bạn</h1>
+
+  {% if items %}
+    <div class="space-y-6">
+      {% for item in items %}
+        <div class="flex items-center bg-white p-4 rounded-lg shadow-sm">
+          <!-- Ảnh sản phẩm -->
+          <img src="{{ item.image_url or 'https://via.placeholder.com/100' }}" alt="{{ item.name }}" class="w-24 h-24 object-cover rounded mr-6">
+
+          <!-- Thông tin sản phẩm -->
+          <div class="flex-1">
+            <h2 class="text-lg font-semibold">{{ item.name }}</h2>
+            <p class="text-gray-600">Giá: <span class="font-medium text-black">{{ item.price }}đ</span></p>
+            <p class="text-gray-600">Số lượng: {{ item.quantity }}</p>
+          </div>
+
+          <!-- Xoá -->
+          <form method="post" action="/cart/remove/{{ item.id }}">
+            <button type="submit" class="text-red-500 hover:underline text-sm">🗑 Xoá</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Tổng cộng & thanh toán -->
+    <div class="mt-8 flex justify-between items-center bg-white p-4 rounded-lg shadow">
+      <div class="text-xl font-semibold">
+        Tổng cộng: 
+        <span class="text-green-600">{{ cart_total | round(2) }}đ</span>
+      </div>
+      <a href="/checkout" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition">
+        ✅ Thanh toán
+      </a>
+    </div>
+  {% else %}
+    <div class="text-center text-gray-600">
+      <p>Giỏ hàng của bạn đang trống.</p>
+      <a href="/" class="text-blue-600 hover:underline">← Tiếp tục mua sắm</a>
+    </div>
+  {% endif %}
+{% endblock %}
