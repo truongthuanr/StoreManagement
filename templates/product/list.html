@@ -1,5 +1,8 @@
+
 {% extends "base.html" %}
+
 {% block content %}
+<main class="container mx-auto p-6 pt-20">
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
   {% for product in products %}
     <div class="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
@@ -23,4 +26,5 @@
     </div>
   {% endfor %}
 </div>
+</main>
 {% endblock %}

@@ -29,7 +29,7 @@
                 <tr class="border-t hover:bg-gray-50">
                     <td class="py-3 px-4">
                         {% if p.image_url %}
-                        <img src="/{{ upload_dir }}/{{ p.image_url }}" alt="{{ p.name }}" class="w-16 h-16 object-cover rounded">
+                        <img src="{{ p.image_url }}" alt="{{ p.name }}" class="w-16 h-16 object-cover rounded">
                         {% else %}
                         <div class="w-16 h-16 bg-gray-200 flex items-center justify-center text-gray-400 rounded">
                             No image
@@ -41,7 +41,7 @@
                     <td class="py-3 px-4">{{ p.stock }}</td>
                     <td class="py-3 px-4">{{ p.category.name if p.category else "Không có" }}</td>
                     <td class="py-3 px-4 space-x-2">
-                        <a href="/admin/products/{{ p.id }}/edit" class="text-blue-600 hover:underline">✏️ Sửa</a>
+                        <a href="/admin/products/edit/{{ p.id }}" class="text-blue-600 hover:underline">✏️ Sửa</a>
                         <form method="post" action="/admin/products/{{ p.id }}/delete" class="inline">
                             <button type="submit" onclick="return confirm('Bạn chắc chắn xoá sản phẩm này?')" class="text-red-500 hover:underline">
                                 🗑 Xoá
