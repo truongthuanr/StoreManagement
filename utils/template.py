@@ -15,5 +15,6 @@ def render_template(request: Request, template_name: str, context: dict = {}) ->
         **context,
         "request": request,
         "user": user,
+        "upload_dir":UPLOAD_DIR,
     }
     return templates.TemplateResponse(template_name, context)
