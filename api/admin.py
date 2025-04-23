@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Request, HTTPException, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
+from starlette.status import HTTP_302_FOUND
 from fastapi.templating import Jinja2Templates
 from typing import Optional
 import os, shutil
@@ -9,9 +10,11 @@ from uuid import uuid4
 
 from config.config import *
 from utils.template import render_template
+from utils.file_utils import save_upload_image
 from model.data.models import Category, Product, User  # SQLAlchemy Product model
 from db_config.mysql_config import sess_db
 from auth.dependencies import require_admin
+from repository.product import ProductRepository
 
 
 
@@ -20,7 +23,9 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
-
+# ===============================
+# Admin main page 
+# ===============================
 @router.get("/admin", response_class=HTMLResponse)
 def admin_home(request: Request, admin: User = Depends(require_admin)):
     return templates.TemplateResponse("admin/admin.html", {
@@ -28,7 +33,9 @@ def admin_home(request: Request, admin: User = Depends(require_admin)):
         "admin": admin
     })
 
-
+# ================================
+# Admin product manage Function
+# ================================
 @router.get("/admin/products", response_class=HTMLResponse)
 def admin_products(request: Request, db: Session = Depends(sess_db), admin: User = Depends(require_admin)):
     products = db.query(Product).all()
@@ -39,9 +46,10 @@ def admin_products(request: Request, db: Session = Depends(sess_db), admin: User
         "upload_dir": UPLOAD_DIR,
     })
 
-@router.get("/admin/products/{product_id}/edit", response_class=HTMLResponse)
+@router.get("/admin/products/edit/{product_id}", response_class=HTMLResponse)
 def edit_product_form(product_id: int, request: Request, db: Session = Depends(sess_db), user=Depends(require_admin)):
-    product = db.query(Product).filter_by(id=product_id).first()
+    repo = ProductRepository(db)
+    product = repo.get_by_id(product_id=product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Không tìm thấy sản phẩm")
 
@@ -53,29 +61,45 @@ def edit_product_form(product_id: int, request: Request, db: Session = Depends(s
         "user": user
     })
 
-@router.post("/admin/products/{product_id}/edit", response_class=HTMLResponse)
-def update_product(
+@router.post("/admin/products/edit/{product_id}", response_class=HTMLResponse)
+async def update_product(
     product_id: int,
     request: Request,
     name: str = Form(...),
     price: float = Form(...),
     description: str = Form(""),
+    stock: int = Form(...),
     category_id: int = Form(...),
+    image: UploadFile = File(None),
     db: Session = Depends(sess_db),
     user=Depends(require_admin)
 ):
-    product = db.query(Product).filter_by(id=product_id).first()
+    repo = ProductRepository(db)
+    product = repo.get_by_id(product_id=product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Không tìm thấy sản phẩm")
 
-    product.name = name
-    product.price = price
-    product.description = description
-    product.category_id = category_id
-    db.commit()
+    # create updates data
+    updates = {
+        "name": name,
+        "price": price,
+        "stock": stock,
+        
+        "description": description,
+        "category_id": category_id
+    }
+    # create update for image if there is new image
+    if image:
+        filename = await save_upload_image(image, UPLOAD_DIR)
+        updates["image_url"] = f"/{UPLOAD_DIR}/{filename}"
 
-    # Redirect về trang danh sách sản phẩm hoặc thông báo cập nhật thành công
-    return RedirectResponse(url="/admin/products", status_code=303)
+    updated = repo.update(product_id, updates)
+
+    if not updated:
+        raise HTTPException(status_code=500, detail="Cập nhật thất bại")
+
+    return RedirectResponse(url="/admin/products", status_code=HTTP_302_FOUND)
+
 
 
 @router.get("/admin/products/add")

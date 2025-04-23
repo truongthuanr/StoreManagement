@@ -1,40 +1,69 @@
-{% extends "admin_base.html" %}
-
-{% block title %}Chỉnh sửa sản phẩm{% endblock %}
+{% extends "admin/admin_base.html" %}
 
 {% block content %}
-  <h1 class="text-2xl font-bold mb-4">✏️ Chỉnh sửa sản phẩm</h1>
+<h1 class="text-3xl font-bold mb-6">✏️ Chỉnh sửa sản phẩm</h1>
 
-  <form method="post" action="/admin/products/{{ product.id }}/edit" class="space-y-4 bg-white p-6 rounded shadow">
-    <div>
-      <label class="block font-semibold">Tên sản phẩm</label>
-      <input type="text" name="name" value="{{ product.name }}" class="w-full border rounded px-3 py-2" required>
-    </div>
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <form method="post" action="/admin/products/edit/{{ product.id }}" enctype="multipart/form-data" class="space-y-4">
+        <div>
+            <label class="block font-semibold mb-1">Tên sản phẩm</label>
+            <input type="text" name="name" value="{{ product.name }}" required
+                   class="w-full border border-gray-300 rounded px-4 py-2">
+        </div>
 
-    <div>
-      <label class="block font-semibold">Giá</label>
-      <input type="number" name="price" value="{{ product.price }}" step="0.01" class="w-full border rounded px-3 py-2" required>
-    </div>
+        <div>
+            <label class="block font-semibold mb-1">Mô tả</label>
+            <textarea name="description" rows="3"
+                      class="w-full border border-gray-300 rounded px-4 py-2">{{ product.description }}</textarea>
+        </div>
 
-    <div>
-      <label class="block font-semibold">Mô tả</label>
-      <textarea name="description" class="w-full border rounded px-3 py-2">{{ product.description }}</textarea>
-    </div>
+        <div class="flex space-x-4">
+            <div class="flex-1">
+                <label class="block font-semibold mb-1">Giá (₫)</label>
+                <input type="number" name="price" step="1000" min="0" value="{{ product.price }}" required
+                       class="w-full border border-gray-300 rounded px-4 py-2">
+            </div>
+            <div class="flex-1">
+                <label class="block font-semibold mb-1">Tồn kho</label>
+                <input type="number" name="stock" min="0" value="{{ product.stock }}" required
+                       class="w-full border border-gray-300 rounded px-4 py-2">
+            </div>
+        </div>
 
-    <div>
-      <label class="block font-semibold">Danh mục</label>
-      <select name="category_id" class="w-full border rounded px-3 py-2">
-        {% for cat in categories %}
-          <option value="{{ cat.id }}" {% if product.category_id == cat.id %}selected{% endif %}>
-            {{ cat.name }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
+        <div>
+            <label class="block font-semibold mb-1">Danh mục</label>
+            <select name="category_id" required class="w-full border border-gray-300 rounded px-4 py-2">
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if product.category_id == cat.id %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <div class="flex justify-end space-x-4">
-      <a href="/admin/products" class="text-blue-600 hover:underline">← Quay lại</a>
-      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Lưu thay đổi</button>
-    </div>
-  </form>
+        <div>
+            <label class="block font-semibold mb-1">Ảnh hiện tại</label>
+            {% if product.image_filename %}
+                <img src="/static/uploads/{{ product.image_filename }}" alt="{{ product.name }}"
+                     class="w-32 h-32 object-cover rounded mb-2">
+            {% else %}
+                <p class="text-gray-500 italic">Chưa có ảnh</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label class="block font-semibold mb-1">Thay ảnh mới (nếu có)</label>
+            <input type="file" name="image" accept="image/*"
+                   class="w-full border border-gray-300 rounded px-4 py-2">
+        </div>
+
+        <div class="pt-4">
+            <button type="submit"
+                    class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                💾 Lưu thay đổi
+            </button>
+            <a href="/admin/products" class="ml-4 text-blue-600 hover:underline">← Quay lại danh sách</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
