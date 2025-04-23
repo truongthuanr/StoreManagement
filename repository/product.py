@@ -1,22 +1,12 @@
-from typing import Dict, Any
-from dataclasses import asdict
 from sqlalchemy.orm import Session
-from model.data.models import Product
-
-from datetime import date, datetime
-from bson.json_util import dumps
-import json
-from bson.dbref import DBRef
-
+from model.data.models import Product  # Đảm bảo bạn đã import đúng model
 
 class ProductRepository:
     def __init__(self, sess: Session):
-        self.sess: Session = sess
+        self.sess = sess
 
     def get_all(self, skip: int = 0, limit: int = 100):
-        # return self.sess.query(Product).offset(skip).limit(limit).all()
-        return self.sess.query(Product).all()
-
+        return self.sess.query(Product).offset(skip).limit(limit).all()
 
     def get_by_id(self, product_id: int):
         return self.sess.query(Product).filter(Product.id == product_id).one_or_none()
@@ -29,25 +19,36 @@ class ProductRepository:
             self.sess.add(product)
             self.sess.commit()
             self.sess.refresh(product)
-        except:
+            return True
+        except Exception as e:
+            self.sess.rollback()
+            print("Error creating product:", e)
             return False
-        return True
-    
 
-    def update(self, product_id: int, updates: dict) -> bool:
+    def update(self, product_id: int, updates: dict):
         db_product = self.get_by_id(product_id)
         if not db_product:
             return None
         for key, value in updates.items():
             setattr(db_product, key, value)
-        self.db.commit()
-        self.db.refresh(db_product)
-        return db_product
+        try:
+            self.sess.commit()
+            self.sess.refresh(db_product)
+            return db_product
+        except Exception as e:
+            self.sess.rollback()
+            print("Error updating product:", e)
+            return None
 
     def delete(self, product_id: int) -> bool:
         db_product = self.get_by_id(product_id)
         if not db_product:
             return False
-        self.db.delete(db_product)
-        self.db.commit()
-        return True
+        try:
+            self.sess.delete(db_product)
+            self.sess.commit()
+            return True
+        except Exception as e:
+            self.sess.rollback()
+            print("Error deleting product:", e)
+            return False
