@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from api import auth, product, admin, cart
+from api import auth, product, admin, cart, home
 from middlewares.user_context import UserContextMiddleware
 
 
@@ -13,3 +13,4 @@ app.include_router(product.router)
 app.include_router(auth.router)
 app.include_router(admin.router, tags=["Admin"])
 app.include_router(cart.router)
+app.include_router(home.router)

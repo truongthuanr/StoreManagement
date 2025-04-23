@@ -11,7 +11,7 @@ from utils.template import render_template
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory="templates")  # template response
+# templates = Jinja2Templates(directory="templates")  # template response
 
 
 @router.post("/cart/add", response_class=RedirectResponse)

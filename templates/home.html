@@ -1,16 +1,45 @@
+
 {% extends "base.html" %}
-{% block title %}Trang chủ - My Shop{% endblock %}
+
+{% block title %}Trang chủ - Cửa hàng Online{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">Sản phẩm mới</h1>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-  {% for product in products %}
-  <div class="bg-white p-4 rounded shadow">
-    <img src="{{ product.image }}" class="w-full h-40 object-cover rounded mb-2">
-    <h2 class="font-semibold">{{ product.name }}</h2>
-    <p class="text-sm text-gray-600">{{ product.price }}₫</p>
-    <a href="/product/{{ product.id }}" class="mt-2 inline-block text-blue-600 hover:underline">Xem chi tiết</a>
+<div class="bg-white">
+  <!-- Banner -->
+  <div class="relative bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-20 px-6 text-center">
+    <h1 class="text-4xl font-bold mb-2">🛍️ Chào mừng đến với cửa hàng Online!</h1>
+    <p class="text-lg mb-4">Khám phá hàng ngàn sản phẩm chất lượng, giá cả hợp lý.</p>
+    <a href="/products" class="bg-white text-blue-600 font-semibold px-6 py-3 rounded hover:bg-gray-100 transition">🛒 Mua sắm ngay</a>
   </div>
-  {% endfor %}
+
+  <!-- Danh mục sản phẩm -->
+  <div class="max-w-6xl mx-auto py-12 px-4">
+    <h2 class="text-2xl font-bold mb-6">📂 Danh mục sản phẩm</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {% for cat in categories %}
+        <a href="/category/{{ cat.id }}" class="bg-gray-100 rounded-lg p-4 hover:bg-blue-100 transition text-center">
+          <div class="text-lg font-semibold">{{ cat.name }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Sản phẩm nổi bật -->
+  <div class="max-w-6xl mx-auto py-12 px-4">
+    <h2 class="text-2xl font-bold mb-6">🔥 Sản phẩm nổi bật</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {% for product in featured_products %}
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
+          <a href="/products/{{ product.id }}">
+            <img src="{{ product.image_url or '/static/images/placeholder.png' }}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded-t">
+            <div class="p-4">
+              <h3 class="text-lg font-semibold mb-2">{{ product.name }}</h3>
+              <p class="text-gray-700 font-medium">{{ product.price }}₫</p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 {% endblock %}
